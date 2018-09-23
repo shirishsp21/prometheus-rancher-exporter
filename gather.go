@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"net/http"
+	"crypto/tls"
 	"strconv"
 	"strings"
 	"time"
@@ -128,7 +129,11 @@ func getJSON(url string, accessKey string, secretKey string, target interface{})
 
 	log.Info("Scraping: ", url)
 
-	client := &http.Client{}
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
+
+	client := &http.Client{Transport: tr}
 	req, err := http.NewRequest("GET", url, nil)
 
 	if err != nil {
